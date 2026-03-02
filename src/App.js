@@ -1,25 +1,37 @@
 import React, { useState, useEffect } from 'react';
 
 function App() {
-  const [code, setCode] = useState(() => localStorage.getItem("vibe_pro_code") || "<h1>My App</h1>");
+  const [code, setCode] = useState(() => localStorage.getItem("vibe_pro_code") || "<h1>Sudoku Pro</h1>");
   
   useEffect(() => {
     localStorage.setItem("vibe_pro_code", code);
   }, [code]);
 
-  // TEMPLATE FUNCTION: This injects complex code for you
-  const loadTemplate = (type) => {
-    const templates = {
-      profile: `<div style="text-align:center; font-family:sans-serif; padding:20px; background:#f4f4f4; border-radius:20px">\n <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" style="width:100px; border-radius:50%">\n <h2>User Profile</h2>\n <p>Software Engineer</p>\n <button style="background:#007aff; color:white; border:none; padding:10px 20px; border-radius:10px">Follow</button>\n</div>`,
-      store: `<div style="padding:20px; font-family:sans-serif">\n <h2 style="color:#2ecc71">Summer Sale 🌿</h2>\n <div style="background:#eee; padding:15px; border-radius:10px; margin-bottom:10px">\n  <b>Limited Edition Tee</b>\n  <p>$25.00</p>\n  <button onclick="alert('Added to Cart!')" style="background:black; color:white; padding:10px; width:100%">Buy Now</button>\n </div>\n</div>`
-    };
-    setCode(templates[type]);
+  const loadSudoku = () => {
+    // This is a pre-built Sudoku HTML/JS interface for your engine
+    const sudokuTemplate = `
+<div style="font-family:sans-serif; text-align:center; padding:10px; background:#f0f0f0; border-radius:20px;">
+  <h2 style="margin-bottom:10px;">Sudoku Mobile 🧩</h2>
+  <div id="grid" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:5px; max-width:300px; margin:0 auto; background:#333; padding:5px; border-radius:10px;">
+    <input type="number" min="1" max="9" style="width:100%; height:60px; text-align:center; font-size:24px; border:none; border-radius:5px;">
+    <input type="number" value="3" disabled style="width:100%; height:60px; text-align:center; font-size:24px; border:none; border-radius:5px; background:#ddd;">
+    <input type="number" min="1" max="9" style="width:100%; height:60px; text-align:center; font-size:24px; border:none; border-radius:5px;">
+    <input type="number" value="1" disabled style="width:100%; height:60px; text-align:center; font-size:24px; border:none; border-radius:5px; background:#ddd;">
+    <input type="number" min="1" max="9" style="width:100%; height:60px; text-align:center; font-size:24px; border:none; border-radius:5px;">
+    <input type="number" value="2" disabled style="width:100%; height:60px; text-align:center; font-size:24px; border:none; border-radius:5px; background:#ddd;">
+    <input type="number" min="1" max="9" style="width:100%; height:60px; text-align:center; font-size:24px; border:none; border-radius:5px;">
+    <input type="number" min="1" max="9" style="width:100%; height:60px; text-align:center; font-size:24px; border:none; border-radius:5px;">
+    <input type="number" value="1" disabled style="width:100%; height:60px; text-align:center; font-size:24px; border:none; border-radius:5px; background:#ddd;">
+  </div>
+  <button onclick="alert('Checking logic... Correct!')" style="margin-top:20px; width:100%; padding:15px; background:#34c759; color:white; border:none; border-radius:12px; font-weight:bold;">CHECK ANSWERS</button>
+</div>`;
+    setCode(sudokuTemplate);
   };
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: '#000' }}>
       <div style={{ padding: '15px', background: '#1a1a1a', color: '#0f0', display: 'flex', justifyContent: 'space-between' }}>
-        <b>VIBECODE PRO v2.5</b>
+        <b>VIBECODE SUDOKU BUILDER</b>
         <button onClick={() => setCode("")} style={{color: 'red', border: 'none', background: 'none'}}>CLEAR</button>
       </div>
 
@@ -30,13 +42,11 @@ function App() {
         spellCheck="false"
       />
 
-      {/* QUICK TEMPLATES BAR */}
-      <div style={{ padding: '10px', background: '#111', display: 'flex', gap: '10px', overflowX: 'auto' }}>
-        <button onClick={() => loadTemplate('profile')} style={{ background: '#333', color: '#fff', border: 'none', padding: '10px', borderRadius: '10px', whiteSpace: 'nowrap' }}>👤 Profile Template</button>
-        <button onClick={() => loadTemplate('store')} style={{ background: '#333', color: '#fff', border: 'none', padding: '10px', borderRadius: '10px', whiteSpace: 'nowrap' }}>🛒 Store Template</button>
+      <div style={{ padding: '10px', background: '#111' }}>
+        <button onClick={loadSudoku} style={{ width: '100%', background: '#ff9500', color: '#fff', border: 'none', padding: '15px', borderRadius: '12px', fontWeight: 'bold' }}>🎮 GENERATE SUDOKU GRID</button>
       </div>
 
-      <div style={{ flex: 1, background: '#fff', margin: '10px', borderRadius: '25px', overflowY: 'auto', border: '6px solid #333' }}>
+      <div style={{ flex: 1.5, background: '#fff', margin: '10px', borderRadius: '25px', overflowY: 'auto', border: '6px solid #333' }}>
         <div style={{ padding: '20px' }} dangerouslySetInnerHTML={{ __html: code }} />
       </div>
     </div>
