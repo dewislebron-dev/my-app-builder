@@ -22,7 +22,76 @@ function App() {
     localStorage.setItem("my-app-theme", appTheme);
   }, [myCreatedButtons, appTheme]);
 
-  // 4. LOGIC: How the builder works
+  // 4. LOGIC: How the builder worksimport React, { useState, useEffect } from 'react';
+
+function App() {
+  const [myCreatedButtons, setMyCreatedButtons] = useState(() => {
+    const savedApp = localStorage.getItem("my-number-one-app");
+    return savedApp ? JSON.parse(savedApp) : [];
+  });
+
+  const [appTheme, setAppTheme] = useState(() => {
+    return localStorage.getItem("my-app-theme") || "#ffffff";
+  });
+
+  const [buttonText, setButtonText] = useState("");
+  const [buttonColor, setButtonColor] = useState("#007bff");
+
+  useEffect(() => {
+    localStorage.setItem("my-number-one-app", JSON.stringify(myCreatedButtons));
+    localStorage.setItem("my-app-theme", appTheme);
+  }, [myCreatedButtons, appTheme]);
+
+  const handleAddButton = () => {
+    if (buttonText.trim() === "") return;
+    
+    // HAPTIC FEEDBACK: This makes the iPhone vibrate on tap
+    if (navigator.vibrate) {
+      navigator.vibrate(50); 
+    }
+
+    const newButton = { id: Date.now(), text: buttonText, color: buttonColor };
+    setMyCreatedButtons([...myCreatedButtons, newButton]);
+    setButtonText("");
+  };
+
+  const resetApp = () => {
+    if (window.confirm("Clear everything?")) {
+      setMyCreatedButtons([]);
+      setAppTheme("#ffffff");
+    }
+  };
+
+  return (
+    <div style={{ padding: '20px', fontFamily: '-apple-system, sans-serif', textAlign: 'center', backgroundColor: '#f4f4f9', minHeight: '100vh' }}>
+      <h1 style={{fontSize: '24px', fontWeight: '800'}}>App Studio Pro 🚀</h1>
+      
+      <div style={{ background: 'white', padding: '20px', borderRadius: '20px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)', marginBottom: '30px', textAlign: 'left' }}>
+        <label style={{fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>Button Name:</label>
+        <input value={buttonText} onChange={(e) => setButtonText(e.target.value)} placeholder="e.g., Get Started" style={{ width: '100%', padding: '15px', borderRadius: '12px', border: '1px solid #ddd', marginBottom: '15px', boxSizing: 'border-box' }} />
+        
+        <label style={{fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>Button Color:</label>
+        <input type="color" value={buttonColor} onChange={(e) => setButtonColor(e.target.value)} style={{ width: '100%', height: '50px', border: 'none', borderRadius: '12px', marginBottom: '20px' }} />
+        
+        <button onClick={handleAddButton} style={{ width: '100%', padding: '18px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '15px', fontWeight: 'bold', fontSize: '16px' }}>Add Button</button>
+        
+        <button onClick={resetApp} style={{ width: '100%', marginTop: '15px', padding: '10px', backgroundColor: 'transparent', color: '#ff4d4d', border: '1px solid #ff4d4d', borderRadius: '10px' }}>Reset Builder</button>
+      </div>
+
+      <h2 style={{fontSize: '20px', marginBottom: '15px'}}>Live View</h2>
+      <div style={{ width: '100%', maxWidth: '350px', minHeight: '400px', backgroundColor: appTheme, margin: '0 auto', borderRadius: '40px', border: '8px solid #222', padding: '20px', boxSizing: 'border-box' }}>
+        {myCreatedButtons.length === 0 && <p style={{color: '#999', marginTop: '50%'}}>No elements yet. Start building!</p>}
+        {myCreatedButtons.map(btn => (
+          <button key={btn.id} style={{ width: '100%', padding: '20px', marginBottom: '12px', backgroundColor: btn.color, color: 'white', border: 'none', borderRadius: '15px', fontWeight: '800', fontSize: '18px', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
+            {btn.text}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default App;
   const handleAddButton = () => {
     if (buttonText.trim() === "") return;
     const newButton = { id: Date.now(), text: buttonText, color: buttonColor };
