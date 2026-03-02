@@ -1,63 +1,42 @@
 import React, { useState, useEffect } from 'react';
 
 function App() {
-  // THE ENGINE: This stores the actual logic of the app you are building on your phone
-  const [code, setCode] = useState(() => {
-    return localStorage.getItem("vibecode_engine_v1") || 
-    `<h1>My New App</h1>\n<p>Start coding...</p>`;
-  });
+  const [code, setCode] = useState(() => localStorage.getItem("vibe_pro_code") || "<h1>Hello</h1>");
+  const [logs, setLogs] = useState([]);
 
-  const [savedApps, setSavedApps] = useState(() => {
-    const saved = localStorage.getItem("vibecode_gallery");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  // AUTO-SAVE SYSTEM: This is the "hard save" that was missing before
   useEffect(() => {
-    localStorage.setItem("vibecode_engine_v1", code);
+    localStorage.setItem("vibe_pro_code", code);
   }, [code]);
 
-  const saveToGallery = () => {
-    const name = prompt("Project Name?");
-    if (name) {
-      const newGallery = [...savedApps, { name, code, id: Date.now() }];
-      setSavedApps(newGallery);
-      localStorage.setItem("vibecode_gallery", JSON.stringify(newGallery));
+  // THE BRAIN: This turns your text into a REAL running app
+  const renderApp = () => {
+    try {
+      return <div dangerouslySetInnerHTML={{ __html: code }} />;
+    } catch (err) {
+      return <div style={{color: 'red'}}>Error: {err.message}</div>;
     }
   };
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#000', color: '#fff' }}>
-      {/* TOOLBAR */}
-      <div style={{ padding: '10px', display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #333' }}>
-        <span style={{fontWeight: '800'}}>VIBECODE IDE</span>
-        <div>
-          <button onClick={saveToGallery} style={{ marginRight: '10px', background: '#34c759', color: '#fff', border: 'none', borderRadius: '5px', padding: '5px' }}>SAVE PROJ</button>
-          <button onClick={() => setCode("")} style={{ background: '#ff3b30', color: '#fff', border: 'none', borderRadius: '5px', padding: '5px' }}>CLEAR</button>
-        </div>
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: '#000' }}>
+      <div style={{ padding: '15px', background: '#1a1a1a', color: '#0f0', borderBottom: '2px solid #333', fontSize: '12px', fontWeight: 'bold' }}>
+        SYSTEM OPERATIONAL // VIBECODE CORE v2.0
       </div>
 
-      {/* CODE EDITOR */}
+      {/* THE EDITOR */}
       <textarea 
-        style={{ flex: 1.5, width: '100%', padding: '15px', background: '#1a1a1a', color: '#58d1ff', fontFamily: 'monospace', fontSize: '16px', border: 'none', outline: 'none', resize: 'none' }}
+        style={{ flex: 1, width: '100%', padding: '20px', background: '#000', color: '#58d1ff', fontFamily: 'monospace', fontSize: '16px', border: 'none', outline: 'none' }}
         value={code}
         onChange={(e) => setCode(e.target.value)}
         spellCheck="false"
       />
 
-      {/* LIVE APP RUNTIME */}
-      <div style={{ flex: 1, backgroundColor: '#fff', color: '#000', margin: '5px', borderRadius: '20px', overflowY: 'auto', border: '4px solid #333' }}>
-        <div style={{ padding: '5px', fontSize: '10px', background: '#ddd', textAlign: 'center' }}>RUNNING APP</div>
-        <div dangerouslySetInnerHTML={{ __html: code }} />
-      </div>
-
-      {/* PROJECT GALLERY */}
-      <div style={{ height: '60px', overflowX: 'auto', display: 'flex', gap: '10px', padding: '10px', background: '#111' }}>
-        {savedApps.map(proj => (
-          <button key={proj.id} onClick={() => setCode(proj.code)} style={{ whiteSpace: 'nowrap', padding: '5px 15px', borderRadius: '15px', background: '#333', color: '#fff', border: '1px solid #555' }}>
-            {proj.name}
-          </button>
-        ))}
+      {/* THE LIVE RUNTIME */}
+      <div style={{ flex: 1, background: '#fff', margin: '10px', borderRadius: '25px', overflow: 'hidden', border: '6px solid #333', position: 'relative' }}>
+        <div style={{ position: 'absolute', top: 0, width: '100%', background: '#eee', padding: '5px', fontSize: '10px', textAlign: 'center' }}>LIVE MOBILE RUNTIME</div>
+        <div style={{ padding: '20px', marginTop: '20px' }}>
+          {renderApp()}
+        </div>
       </div>
     </div>
   );
